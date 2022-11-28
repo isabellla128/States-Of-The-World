@@ -90,5 +90,5 @@ if __name__ == '__main__':
     states_of_the_world_collection = connect_to_MongoDB()
     list_of_dictionaries = get_name_and_capital_of_countries_and_create_list_of_dictionaries()
     print(list_of_dictionaries)
-    for dictionary in list_of_dictionaries:
-        states_of_the_world_collection.insert_one(dictionary)
+    #for dictionary in list_of_dictionaries:
+    #    states_of_the_world_collection.insert_one(dictionary)
