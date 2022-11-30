@@ -99,6 +99,7 @@ def add_small_density(states_of_the_world_collection):
 
 
 def add_countries_and_population_if_not_exist(states_of_the_world_collection, list_of_dictionaries):
+    list_of_dictionaries = sorted(list_of_dictionaries, key=lambda d: d['Country'])
     for dictionary in list_of_dictionaries:
         cursor = states_of_the_world_collection.find({"Country": dictionary["Country"]})
         ok = False
@@ -133,10 +134,17 @@ def get_name_and_population_of_countries_and_create_list_of_dictionaries():
     list_of_dictionaries = []
 
     for line in list_of_country_and_population:
-        header = ["Country", "Population"]
+        header = ["Country", "Population", "Area", "Capital", "Density", "Constitutional form", "Neighbours", "Time Zone", "Languages"]
         dictionary = dict.fromkeys(header)
         dictionary["Country"] = line[0]
         dictionary["Population"] = line[1]
+        dictionary["Area"] = ""
+        dictionary["Capital"] = ""
+        dictionary["Density"] = ""
+        dictionary["Constitutional form"] = ""
+        dictionary["Neighbours"] = []
+        dictionary["Time Zone"] = []
+        dictionary["Languages"] = []
         list_of_dictionaries.append(dictionary)
 
     return list_of_dictionaries
@@ -199,15 +207,7 @@ def get_density(states_of_the_world_collection):
         )
 
 
-def get_constitutional_form(states_of_the_world_collection, list_of_dictionaries):
-    for dictionary in list_of_dictionaries:
-        states_of_the_world_collection.update_one(
-            {"Country": dictionary["Country"]},
-            {
-                "$set": {"Constitutional form": ""}
-            }
-        )
-
+def get_constitutional_form(states_of_the_world_collection):
     url = "https://en.wikipedia.org/wiki/List_of_countries_by_system_of_government"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -233,15 +233,7 @@ def get_constitutional_form(states_of_the_world_collection, list_of_dictionaries
         )
 
 
-def get_neighbours(states_of_the_world_collection, list_of_dictionaries):
-    for dictionary in list_of_dictionaries:
-        states_of_the_world_collection.update_one(
-            {"Country": dictionary["Country"]},
-            {
-                "$set": {"Neighbours": []}
-            }
-        )
-
+def get_neighbours(states_of_the_world_collection):
     url = "https://en.wikipedia.org/wiki/List_of_countries_and_territories_by_land_borders"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -325,7 +317,7 @@ if __name__ == '__main__':
     add_small_capitals_and_areas(states_of_the_world_collection)
     get_density(states_of_the_world_collection)
     add_small_density(states_of_the_world_collection)
-    get_constitutional_form(states_of_the_world_collection, list_of_dictionaries)
-    get_neighbours(states_of_the_world_collection, list_of_dictionaries)
+    get_constitutional_form(states_of_the_world_collection)
+    get_neighbours(states_of_the_world_collection)
     get_time_zones(states_of_the_world_collection)
     get_spoken_languages(states_of_the_world_collection)
