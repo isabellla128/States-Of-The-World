@@ -1,7 +1,7 @@
 import re
 import requests
 from bs4 import BeautifulSoup
-from connect_to_mongodb import connect_to_MongoDB
+from connect_to_mongodb import connect_to_mongodb
 
 
 def get_right_name_of_country(country):
@@ -72,7 +72,7 @@ def add_small_capitals_and_areas(states_of_the_world_collection):
         }
     )
     states_of_the_world_collection.update_one(
-        {"Country": "South Ossetia"},
+        {"Country": "South spatia"},
         {
             "$set": {"Capital": "Țhinvali", "Area": 3900}
         }
@@ -105,7 +105,7 @@ def add_countries_and_population_if_not_exist(states_of_the_world_collection, li
     for dictionary in list_of_dictionaries:
         cursor = states_of_the_world_collection.find({"Country": dictionary["Country"]})
         ok = False
-        for document in cursor:
+        for _ in cursor:
             ok = True
             break
         if not ok:
@@ -136,7 +136,8 @@ def get_name_and_population_of_countries_and_create_list_of_dictionaries():
     list_of_dictionaries = []
 
     for line in list_of_country_and_population:
-        header = ["Country", "Population", "Area", "Capital", "Density", "Constitutional form", "Neighbours", "Time Zone", "Languages"]
+        header = ["Country", "Population", "Area", "Capital", "Density", "Constitutional form",
+                  "Neighbours", "Time Zone", "Languages"]
         dictionary = dict.fromkeys(header)
         dictionary["Country"] = line[0]
         dictionary["Population"] = float(line[1])
@@ -318,7 +319,7 @@ def get_spoken_languages(states_of_the_world_collection):
 
 
 def crawler_wikipedia():
-    states_of_the_world_collection = connect_to_MongoDB()
+    states_of_the_world_collection = connect_to_mongodb()
     list_of_dictionaries = get_name_and_population_of_countries_and_create_list_of_dictionaries()
     add_countries_and_population_if_not_exist(states_of_the_world_collection, list_of_dictionaries)
     get_capital_and_area(states_of_the_world_collection)
@@ -329,5 +330,6 @@ def crawler_wikipedia():
     get_neighbours(states_of_the_world_collection)
     get_time_zones(states_of_the_world_collection)
     get_spoken_languages(states_of_the_world_collection)
+
 
 crawler_wikipedia()
