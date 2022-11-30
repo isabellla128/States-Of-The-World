@@ -309,7 +309,7 @@ def get_spoken_languages(states_of_the_world_collection):
         )
 
 
-if __name__ == '__main__':
+def crawler_wikipedia():
     states_of_the_world_collection = connect_to_MongoDB()
     list_of_dictionaries = get_name_and_population_of_countries_and_create_list_of_dictionaries()
     add_countries_and_population_if_not_exist(states_of_the_world_collection, list_of_dictionaries)
