@@ -45,40 +45,42 @@ def get_right_name_of_country(country):
 
 
 def get_right_name_of_country_in_a_list(list_of_countries):
+    new_list_of_countries = []
     for country in list_of_countries:
-        line = get_right_name_of_country(country)
-    return list_of_countries
+        if country[-1] != ']':
+            new_list_of_countries.append(get_right_name_of_country(country))
+    return new_list_of_countries
 
 
 def add_small_capitals_and_areas(states_of_the_world_collection):
     states_of_the_world_collection.update_one(
         {"Country": "Burkina Faso"},
         {
-            "$set": {"Capital": "Ouagadougou", "Area": "274400 km^2"}
+            "$set": {"Capital": "Ouagadougou", "Area": 274400}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "Abkhazia"},
         {
-            "$set": {"Capital": "Suhumi", "Area": "8665 km^2"}
+            "$set": {"Capital": "Suhumi", "Area": 8665}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "Curaçao"},
         {
-            "$set": {"Capital": "Willemstad", "Area": "152369 km^2"}
+            "$set": {"Capital": "Willemstad", "Area": 152369}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "South Ossetia"},
         {
-            "$set": {"Capital": "Țhinvali", "Area": "3900 km^2"}
+            "$set": {"Capital": "Țhinvali", "Area": 3900}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "Tokelau"},
         {
-            "$set": {"Capital": "Nukunonu", "Area": "10,2 km^2"}
+            "$set": {"Capital": "Nukunonu", "Area": 10.2}
         }
     )
 
@@ -87,13 +89,13 @@ def add_small_density(states_of_the_world_collection):
     states_of_the_world_collection.update_one(
         {"Country": "Abkhazia"},
         {
-            "$set": {"Density": "28.47 km^2"}
+            "$set": {"Density": 28.47}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "South Ossetia"},
         {
-            "$set": {"Density": "13.7 km^2"}
+            "$set": {"Density": 13.7}
         }
     )
 
@@ -137,10 +139,10 @@ def get_name_and_population_of_countries_and_create_list_of_dictionaries():
         header = ["Country", "Population", "Area", "Capital", "Density", "Constitutional form", "Neighbours", "Time Zone", "Languages"]
         dictionary = dict.fromkeys(header)
         dictionary["Country"] = line[0]
-        dictionary["Population"] = line[1]
-        dictionary["Area"] = ""
+        dictionary["Population"] = float(line[1])
+        dictionary["Area"] = 0
         dictionary["Capital"] = ""
-        dictionary["Density"] = ""
+        dictionary["Density"] = 0
         dictionary["Constitutional form"] = ""
         dictionary["Neighbours"] = []
         dictionary["Time Zone"] = []
@@ -171,13 +173,15 @@ def get_capital_and_area(states_of_the_world_collection):
         area = area.replace(",", "")
         if area[-1] == ']':
             area = area[:area.find('[')]
+        if area == "n/a":
+            area = 0
         list_of_country_capital_area.append([country, capital, area])
 
     for line in list_of_country_capital_area:
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Capital": line[1], "Area": line[2] + str(" km^2")}
+                "$set": {"Capital": line[1], "Area": float(line[2])}
             }
         )
 
@@ -202,7 +206,7 @@ def get_density(states_of_the_world_collection):
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Density": line[1]+str(" /km^2")}
+                "$set": {"Density": float(line[1])}
             }
         )
 
@@ -256,7 +260,7 @@ def get_neighbours(states_of_the_world_collection):
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Neighbours": line[1:]}
+                "$set": {"Neighbours": line[1:][0]}
             }
         )
 
@@ -280,7 +284,7 @@ def get_time_zones(states_of_the_world_collection):
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Time Zone": line[1:]}
+                "$set": {"Time Zone": line[1:][0]}
             }
         )
 
@@ -297,14 +301,18 @@ def get_spoken_languages(states_of_the_world_collection):
         country = [d.text.rstrip() for d in row.find_all('a')][0]
         country = get_right_name_of_country(country)
         list_of_children = row.find_all('td')[1]
-        languages = [d.text.rstrip() for d in list_of_children.find_all('a')]
-        languages = get_right_name_of_country_in_a_list(languages)
+        if len(list_of_children) == 1:
+            languages = [d.text.rstrip() for d in list_of_children]
+        else:
+            languages = [d.text.rstrip() for d in list_of_children.find_all('a')]
+            languages = get_right_name_of_country_in_a_list(languages)
         list_of_country_and_languages.append([country, languages])
+
     for line in list_of_country_and_languages:
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Languages": line[1:]}
+                "$set": {"Languages": line[1:][0]}
             }
         )
 
@@ -321,3 +329,5 @@ def crawler_wikipedia():
     get_neighbours(states_of_the_world_collection)
     get_time_zones(states_of_the_world_collection)
     get_spoken_languages(states_of_the_world_collection)
+
+crawler_wikipedia()
