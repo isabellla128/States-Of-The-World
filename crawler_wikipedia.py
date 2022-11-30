@@ -45,9 +45,11 @@ def get_right_name_of_country(country):
 
 
 def get_right_name_of_country_in_a_list(list_of_countries):
+    new_list_of_countries = []
     for country in list_of_countries:
-        line = get_right_name_of_country(country)
-    return list_of_countries
+        if country[-1] != ']':
+            new_list_of_countries.append(get_right_name_of_country(country))
+    return new_list_of_countries
 
 
 def add_small_capitals_and_areas(states_of_the_world_collection):
@@ -258,7 +260,7 @@ def get_neighbours(states_of_the_world_collection):
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Neighbours": line[1:]}
+                "$set": {"Neighbours": line[1:][0]}
             }
         )
 
@@ -282,7 +284,7 @@ def get_time_zones(states_of_the_world_collection):
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Time Zone": line[1:]}
+                "$set": {"Time Zone": line[1:][0]}
             }
         )
 
@@ -299,14 +301,18 @@ def get_spoken_languages(states_of_the_world_collection):
         country = [d.text.rstrip() for d in row.find_all('a')][0]
         country = get_right_name_of_country(country)
         list_of_children = row.find_all('td')[1]
-        languages = [d.text.rstrip() for d in list_of_children.find_all('a')]
-        languages = get_right_name_of_country_in_a_list(languages)
+        if len(list_of_children) == 1:
+            languages = [d.text.rstrip() for d in list_of_children]
+        else:
+            languages = [d.text.rstrip() for d in list_of_children.find_all('a')]
+            languages = get_right_name_of_country_in_a_list(languages)
         list_of_country_and_languages.append([country, languages])
+
     for line in list_of_country_and_languages:
         states_of_the_world_collection.update_one(
             {"Country": line[0]},
             {
-                "$set": {"Languages": line[1:]}
+                "$set": {"Languages": line[1:][0]}
             }
         )
 
