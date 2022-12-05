@@ -5,6 +5,7 @@ URL = "http://127.0.0.1:5000"
 
 
 def get_method(route):
+    """Display the response of the route"""
     response_api = requests.get(URL + route)
     if response_api.status_code == 200:
         data = response_api.text
@@ -16,6 +17,7 @@ def get_method(route):
 
 
 def input_from_user():
+    """Get input from user"""
     command = input("Enter a route: ")
     while True:
         if command == '' or command == 'exit':

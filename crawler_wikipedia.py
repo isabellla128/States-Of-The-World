@@ -5,6 +5,7 @@ from connect_to_mongodb import connect_to_mongodb
 
 
 def get_right_name_of_country(country):
+    """Return right name of country"""
     if country.find("South") != -1 and country.find("Korea") != -1:
         country = "South Korea"
     elif country.find("North") != -1 and country.find("Korea") != -1:
@@ -45,6 +46,7 @@ def get_right_name_of_country(country):
 
 
 def get_right_name_of_country_in_a_list(list_of_countries):
+    """Returns a list with the correct names of the countries"""
     new_list_of_countries = []
     for country in list_of_countries:
         if country[-1] != ']':
@@ -53,6 +55,7 @@ def get_right_name_of_country_in_a_list(list_of_countries):
 
 
 def add_small_capitals_and_areas(states_of_the_world_collection):
+    """Add small capitals and areas in database"""
     states_of_the_world_collection.update_one(
         {"Country": "Burkina Faso"},
         {
@@ -86,6 +89,7 @@ def add_small_capitals_and_areas(states_of_the_world_collection):
 
 
 def add_small_density(states_of_the_world_collection):
+    """Add small densities in database"""
     states_of_the_world_collection.update_one(
         {"Country": "Abkhazia"},
         {
@@ -101,6 +105,7 @@ def add_small_density(states_of_the_world_collection):
 
 
 def add_countries_and_population_if_not_exist(states_of_the_world_collection, list_of_dictionaries):
+    """Add countries and population if not exist"""
     list_of_dictionaries = sorted(list_of_dictionaries, key=lambda d: d['Country'])
     for dictionary in list_of_dictionaries:
         cursor = states_of_the_world_collection.find({"Country": dictionary["Country"]})
@@ -113,6 +118,7 @@ def add_countries_and_population_if_not_exist(states_of_the_world_collection, li
 
 
 def get_name_and_population_of_countries_and_create_list_of_dictionaries():
+    """Return name and population of countries and create list of dictionaries"""
     url = "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -154,6 +160,7 @@ def get_name_and_population_of_countries_and_create_list_of_dictionaries():
 
 
 def get_capital_and_area(states_of_the_world_collection):
+    """Add capital and area of countries in database"""
     url = "https://en.wikipedia.org/wiki/List_of_national_capitals_by_area"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -188,6 +195,7 @@ def get_capital_and_area(states_of_the_world_collection):
 
 
 def get_density(states_of_the_world_collection):
+    """Add density of countries in database"""
     url = "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population_density"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -213,6 +221,7 @@ def get_density(states_of_the_world_collection):
 
 
 def get_constitutional_form(states_of_the_world_collection):
+    """Add constitutional form of countries in database"""
     url = "https://en.wikipedia.org/wiki/List_of_countries_by_system_of_government"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -239,6 +248,7 @@ def get_constitutional_form(states_of_the_world_collection):
 
 
 def get_neighbours(states_of_the_world_collection):
+    """Add neighbours of countries in database"""
     url = "https://en.wikipedia.org/wiki/List_of_countries_and_territories_by_land_borders"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -267,6 +277,7 @@ def get_neighbours(states_of_the_world_collection):
 
 
 def get_time_zones(states_of_the_world_collection):
+    """Add time zones of countries in database"""
     url = "https://en.wikipedia.org/wiki/List_of_time_zones_by_country"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -291,6 +302,7 @@ def get_time_zones(states_of_the_world_collection):
 
 
 def get_spoken_languages(states_of_the_world_collection):
+    """Add spoken languages of countries in database"""
     url = "https://en.wikipedia.org/wiki/List_of_official_languages_by_country_and_territory"
     s = requests.Session()
     response = s.get(url, timeout=10)
@@ -319,6 +331,8 @@ def get_spoken_languages(states_of_the_world_collection):
 
 
 def crawler_wikipedia():
+    """Create database and add name, capital, population, density,
+    constitutional form, time zones, spoken languages of countries"""
     states_of_the_world_collection = connect_to_mongodb()
     list_of_dictionaries = get_name_and_population_of_countries_and_create_list_of_dictionaries()
     add_countries_and_population_if_not_exist(states_of_the_world_collection, list_of_dictionaries)
