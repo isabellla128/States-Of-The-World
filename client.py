@@ -5,7 +5,9 @@ URL = "http://127.0.0.1:5000"
 
 
 def get_method(route):
-    """Display the response of the route"""
+    """Display the response of the route
+    :param route: the route given by user for API"""
+
     response_api = requests.get(URL + route)
     if response_api.status_code == 200:
         data = response_api.text

@@ -1,0 +1,6 @@
+import re -> library for regular expression
+import requests -> library that makes a request to a web page
+from bs4 import BeautifulSoup -> library that makes it easy to scrape information from web pages
+from flask import Flask, request -> this is a lightweight Python web framework that provides useful tools and features for creating web applications in the Python Language
+import pymongo -> this is a Python distribution containing tools for working with MongoDB
+import json -> this library is used to work with json

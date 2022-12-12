@@ -21,7 +21,7 @@ def get_top_countries_population():
     """Return top countries according to the population"""
     args = request.args
     constitutional_form = args.get('Top')
-    if constitutional_form:
+    if constitutional_form and constitutional_form.isnumeric():
         document_returned = states_of_the_world_collection.find({}, {"_id": 0}).sort("Population", -1). \
             limit(int(constitutional_form))
         list_to_return = []
@@ -40,7 +40,7 @@ def get_top_countries_densities():
     """Return top countries according to the densities"""
     args = request.args
     constitutional_form = args.get('Top')
-    if constitutional_form:
+    if constitutional_form and constitutional_form.isnumeric():
         document_returned = states_of_the_world_collection.find({}, {"_id": 0}).sort("Density", -1). \
             limit(int(constitutional_form))
         list_to_return = []
@@ -59,7 +59,7 @@ def get_top_countries_areas():
     """Return top countries according to the areas"""
     args = request.args
     constitutional_form = args.get('Top')
-    if constitutional_form:
+    if constitutional_form and constitutional_form.isnumeric():
         document_returned = states_of_the_world_collection.find({}, {"_id": 0}).sort("Area", -1). \
             limit(int(constitutional_form))
         list_to_return = []

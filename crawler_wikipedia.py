@@ -5,7 +5,8 @@ from connect_to_mongodb import connect_to_mongodb
 
 
 def get_right_name_of_country(country):
-    """Return right name of country"""
+    """Return right name of country
+    :param country: the country given for normalization"""
     if country.find("South") != -1 and country.find("Korea") != -1:
         country = "South Korea"
     elif country.find("North") != -1 and country.find("Korea") != -1:
@@ -46,7 +47,8 @@ def get_right_name_of_country(country):
 
 
 def get_right_name_of_country_in_a_list(list_of_countries):
-    """Returns a list with the correct names of the countries"""
+    """Returns a list with the correct names of the countries
+    :param country: the list of countries given for normalization"""
     new_list_of_countries = []
     for country in list_of_countries:
         if country[-1] != ']':
@@ -55,7 +57,8 @@ def get_right_name_of_country_in_a_list(list_of_countries):
 
 
 def add_small_capitals_and_areas(states_of_the_world_collection):
-    """Add small capitals and areas in database"""
+    """Add small capitals and areas in database
+    :param states_of_the_world_collection: the database collection where we need to add the data"""
     states_of_the_world_collection.update_one(
         {"Country": "Burkina Faso"},
         {
