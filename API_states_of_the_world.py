@@ -16,6 +16,54 @@ def get_countries():
     return list_to_return
 
 
+@app.route('/min')
+def get_min():
+    """Return min area of all countries from database"""
+    document_returned = states_of_the_world_collection.find({}, {"_id": 0})
+    min_to_return = 100000
+    country_to_return = ''
+    for line in document_returned:
+        if min_to_return > line.get("Area") > 0:
+            min_to_return = line.get("Area")
+            country_to_return = line.get("Country")
+    return [min_to_return, country_to_return]
+
+
+@app.route('/max')
+def get_max():
+    """Return max area of all countries from database"""
+    document_returned = states_of_the_world_collection.find({}, {"_id": 0})
+    max_to_return = 0
+    country_to_return = ''
+    for line in document_returned:
+        if max_to_return < line.get("Area"):
+            max_to_return = line.get("Area")
+            country_to_return = line.get("Country")
+    return [max_to_return, country_to_return]
+
+
+@app.route('/sum')
+def get_sum():
+    """Return sum of all countries area from database"""
+    document_returned = states_of_the_world_collection.find({}, {"_id": 0})
+    sum_to_return = 0
+    for line in document_returned:
+        sum_to_return = sum_to_return + line.get("Area")
+    return [sum_to_return]
+
+
+@app.route('/avg')
+def get_avg():
+    """Return average of all countries area from database"""
+    document_returned = states_of_the_world_collection.find({}, {"_id": 0})
+    sum_to_return = 0
+    count = 0
+    for line in document_returned:
+        sum_to_return = sum_to_return + line.get("Area")
+        count += 1
+    return [sum_to_return/count]
+
+
 @app.route('/top-countries-population', methods=['GET'])
 def get_top_countries_population():
     """Return top countries according to the population"""

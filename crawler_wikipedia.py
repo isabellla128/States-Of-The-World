@@ -62,25 +62,25 @@ def add_small_capitals_and_areas(states_of_the_world_collection):
     states_of_the_world_collection.update_one(
         {"Country": "Burkina Faso"},
         {
-            "$set": {"Capital": "Ouagadougou", "Area": 274400}
+            "$set": {"Capital": "Ouagadougou", "Area": 274}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "Abkhazia"},
         {
-            "$set": {"Capital": "Suhumi", "Area": 8665}
+            "$set": {"Capital": "Suhumi", "Area": 866}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "Curaçao"},
         {
-            "$set": {"Capital": "Willemstad", "Area": 152369}
+            "$set": {"Capital": "Willemstad", "Area": 152}
         }
     )
     states_of_the_world_collection.update_one(
         {"Country": "South spatia"},
         {
-            "$set": {"Capital": "Țhinvali", "Area": 3900}
+            "$set": {"Capital": "Țhinvali", "Area": 390}
         }
     )
     states_of_the_world_collection.update_one(
